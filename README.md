@@ -9,6 +9,6 @@ Place DVDLogo.nro in the `/switch/` folder on your SD Card
 
 ## Features
 
-Press A button for more speed
-Press + to exit DVDLogo
+Press A button for more speed\
+Press + to exit DVDLogo\
 Use Touchscreen to move the Logo
