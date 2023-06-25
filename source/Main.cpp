@@ -10,7 +10,15 @@ int main()
 	u32 xpos = 0, ypos = 0, speed = 1, col = getRandom();
 	u64 key;
 	bool dirUp = false, dirRight = true;
-	touchPosition touch;
+
+    padConfigureInput(1, HidNpadStyleSet_NpadStandard);
+
+    PadState pad;
+    padInitializeDefault(&pad);
+
+	hidInitializeTouchScreen();
+
+    s32 prev_touchcount=0;
 	
 	Gfx::Init();
 
@@ -19,10 +27,19 @@ int main()
 
 	while (appletMainLoop())
 	{
-		hidScanInput();
-		key = hidKeysDown(CONTROLLER_P1_AUTO);
+		padUpdate(&pad);
+		u64 kDown = padGetButtonsDown(&pad);
 
-		if (key & KEY_A)
+		if (kDown & HidNpadButton_Plus) break;
+
+		HidTouchScreenState state={0};
+        if (hidGetTouchScreenStates(&state, 1)) {
+            if (state.count != prev_touchcount)
+            {
+                prev_touchcount = state.count;
+            } 
+		}
+        if (kDown & HidNpadButton_A)
 		{
 			/* Adjust speed */
 			switch (speed)
@@ -41,22 +58,18 @@ int main()
 					break;
 			}
 		}
-
-		if (key & KEY_PLUS)
-			break;
-
 		/* Direction control */
 		xpos += dirRight ?  speed : -speed;
 		ypos += dirUp    ? -speed :  speed;
 
-		/* Touch screen stuff */
-		if (hidTouchCount())
-		{
-			hidTouchRead(&touch, 0);
-			
-			xpos = touch.px - LogoWidth  / 2;
-			ypos = touch.py - LogoHeight / 2;
-		}
+        for(s32 i=0; i<state.count; i++)
+        {
+			xpos = state.touches[i].x - LogoWidth  / 2;
+			ypos = state.touches[i].y - LogoHeight / 2;
+
+        }
+
+
 		
 		/* Check bounds */
 		if (xpos <= 0)
@@ -88,9 +101,10 @@ int main()
 		}
 
 		Gfx::Draw(xpos, ypos, col);
+		consoleUpdate(NULL);
 	}
 
 	Gfx::Close();
-
+    
 	return 0;
 }
