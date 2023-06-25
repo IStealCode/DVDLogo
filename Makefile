@@ -37,8 +37,8 @@ DATA		:=	data
 INCLUDES	:=	include
 EXEFS_SRC	:=	exefs_src
 APP_TITLE	:=	DVD Logo
-APP_AUTHOR	:=	Simon Aarons
-APP_VERSION	:=	1.2.0
+APP_AUTHOR	:=	IStealCode
+APP_VERSION	:=	1.3.0
 ICON		:=	icon.jpg
 #---------------------------------------------------------------------------------
 # options for code generation
